@@ -1,7 +1,7 @@
 /*
  * @Author: NyanCatda
  * @Date: 2022-11-22 20:00:04
- * @LastEditTime: 2022-11-23 14:09:00
+ * @LastEditTime: 2022-11-23 15:18:18
  * @LastEditors: NyanCatda
  * @Description: TCP服务端
  * @FilePath: \Atsuko\internal\TCPComm\Serve.go
@@ -9,6 +9,7 @@
 package TCPComm
 
 import (
+	"context"
 	"fmt"
 	"net"
 	"strconv"
@@ -21,7 +22,7 @@ import (
  * @param {func} ErrorCall 错误回调函数
  * @return {*}
  */
-func StartServe(Port int, MessageChan chan string, Call func(string)) {
+func StartServe(Port int, Context context.Context, MessageChan chan string, Call func(string)) {
 	// 启动监听访问
 	Listener, err := net.Listen("tcp", "0.0.0.0:"+strconv.Itoa(Port))
 	if err != nil {
@@ -37,9 +38,18 @@ func StartServe(Port int, MessageChan chan string, Call func(string)) {
 			fmt.Println("无法建立连接: ", err)
 			continue
 		}
-		fmt.Println(fmt.Sprintf("成功与 %s 建立连接", Conn.RemoteAddr().String()))
 
-		go ReadProcess(Conn, Call)
-		go WriteProcess(Conn, MessageChan)
+		select {
+		case <-Context.Done():
+			// 如果收到退出信号，关闭连接和监听
+			Conn.Close()
+			Listener.Close()
+			return
+		default:
+			fmt.Println(fmt.Sprintf("成功与 %s 建立连接", Conn.RemoteAddr().String()))
+
+			go ReadProcess(Conn, Call)
+			go WriteProcess(Conn, MessageChan)
+		}
 	}
 }
