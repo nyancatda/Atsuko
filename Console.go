@@ -1,7 +1,7 @@
 /*
  * @Author: NyanCatda
  * @Date: 2022-11-23 15:27:01
- * @LastEditTime: 2022-11-23 15:38:01
+ * @LastEditTime: 2022-11-23 15:46:39
  * @LastEditors: NyanCatda
  * @Description: 控制台处理
  * @FilePath: \Atsuko\Console.go
@@ -37,6 +37,9 @@ func CommandRegister(CancelServer context.CancelFunc) {
 
 		// 连接到服务端
 		Connect(Parameter[0])
+	})
+	Command.Add("send", "发送消息", func(CommandStr string) {
+		SendMessage(CommandStr)
 	})
 
 	Help.Register()
