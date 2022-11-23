@@ -1,7 +1,7 @@
 /*
  * @Author: NyanCatda
  * @Date: 2022-11-23 17:12:24
- * @LastEditTime: 2022-11-23 19:09:00
+ * @LastEditTime: 2022-11-23 20:11:23
  * @LastEditors: NyanCatda
  * @Description: 交互密钥
  * @FilePath: \Atsuko\internal\TCPComm\ExchangeKey.go
@@ -28,7 +28,7 @@ var PersonKeyFile = KeysDir + "%s/%s/public_key.pem" // Person密钥文件路径
  */
 func ExchangeKey(Conn net.Conn) {
 	// 交换密钥
-	fmt.Println("正在与对方交互密钥...")
+	fmt.Println("正在与对方交换密钥...")
 
 	var WaitGroup sync.WaitGroup
 
