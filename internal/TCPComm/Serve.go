@@ -1,7 +1,7 @@
 /*
  * @Author: NyanCatda
  * @Date: 2022-11-22 20:00:04
- * @LastEditTime: 2022-11-23 15:18:18
+ * @LastEditTime: 2022-11-23 15:43:37
  * @LastEditors: NyanCatda
  * @Description: TCP服务端
  * @FilePath: \Atsuko\internal\TCPComm\Serve.go
@@ -36,6 +36,7 @@ func StartServe(Port int, Context context.Context, MessageChan chan string, Call
 		Conn, err := Listener.Accept()
 		if err != nil {
 			fmt.Println("无法建立连接: ", err)
+			ConnectionStatus = false
 			continue
 		}
 
@@ -47,6 +48,7 @@ func StartServe(Port int, Context context.Context, MessageChan chan string, Call
 			return
 		default:
 			fmt.Println(fmt.Sprintf("成功与 %s 建立连接", Conn.RemoteAddr().String()))
+			ConnectionStatus = true
 
 			go ReadProcess(Conn, Call)
 			go WriteProcess(Conn, MessageChan)

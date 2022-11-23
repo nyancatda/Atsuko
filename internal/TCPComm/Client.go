@@ -1,7 +1,7 @@
 /*
  * @Author: NyanCatda
  * @Date: 2022-11-22 20:06:37
- * @LastEditTime: 2022-11-23 14:08:55
+ * @LastEditTime: 2022-11-23 15:43:22
  * @LastEditors: NyanCatda
  * @Description: TCP客户端
  * @FilePath: \Atsuko\internal\TCPComm\Client.go
@@ -25,9 +25,11 @@ func StartClient(Address string, MessageChan chan string, Call func(string)) {
 	Conn, err := net.Dial("tcp", Address)
 	if err != nil {
 		fmt.Println("无法建立连接: ", err)
+		ConnectionStatus = false
 		return
 	}
 	fmt.Println("连接建立成功")
+	ConnectionStatus = true
 
 	go ReadProcess(Conn, Call)
 	go WriteProcess(Conn, MessageChan)

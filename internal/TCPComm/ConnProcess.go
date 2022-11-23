@@ -1,7 +1,7 @@
 /*
  * @Author: NyanCatda
  * @Date: 2022-11-23 14:01:05
- * @LastEditTime: 2022-11-23 14:02:10
+ * @LastEditTime: 2022-11-23 15:42:29
  * @LastEditors: NyanCatda
  * @Description: 链接处理
  * @FilePath: \Atsuko\internal\TCPComm\ConnProcess.go
@@ -12,6 +12,8 @@ import (
 	"fmt"
 	"net"
 )
+
+var ConnectionStatus bool = false // 连接状态标识
 
 /**
  * @description: 连接读取处理
@@ -27,6 +29,7 @@ func ReadProcess(Conn net.Conn, Call func(string)) {
 		_, err := Conn.Read(Tmp[:])
 		if err != nil {
 			fmt.Println("链接已断开: ", err)
+			ConnectionStatus = false
 			break
 		}
 
