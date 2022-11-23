@@ -1,7 +1,7 @@
 /*
  * @Author: NyanCatda
  * @Date: 2022-11-22 20:00:04
- * @LastEditTime: 2022-11-23 15:55:26
+ * @LastEditTime: 2022-11-23 17:29:41
  * @LastEditors: NyanCatda
  * @Description: TCP服务端
  * @FilePath: \Atsuko\internal\TCPComm\Serve.go
@@ -48,6 +48,10 @@ func StartServe(Port int, Context context.Context, MessageChan chan string, Call
 			return
 		default:
 			fmt.Println(fmt.Sprintf("成功与 %s 建立连接", Conn.RemoteAddr().String()))
+
+			// 交换密钥
+			ExchangeKey(Conn)
+
 			ConnectionStatus = true
 
 			go ReadProcess(Conn, Call)

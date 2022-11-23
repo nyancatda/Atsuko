@@ -1,7 +1,7 @@
 /*
  * @Author: NyanCatda
  * @Date: 2022-11-22 20:06:37
- * @LastEditTime: 2022-11-23 15:55:10
+ * @LastEditTime: 2022-11-23 17:29:59
  * @LastEditors: NyanCatda
  * @Description: TCP客户端
  * @FilePath: \Atsuko\internal\TCPComm\Client.go
@@ -29,6 +29,10 @@ func StartClient(Address string, MessageChan chan string, Call func(string, net.
 		return
 	}
 	fmt.Println("连接建立成功")
+
+	// 交换密钥
+	ExchangeKey(Conn)
+
 	ConnectionStatus = true
 
 	go ReadProcess(Conn, Call)

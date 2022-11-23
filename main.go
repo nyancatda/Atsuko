@@ -1,7 +1,7 @@
 /*
  * @Author: NyanCatda
  * @Date: 2022-11-21 19:54:01
- * @LastEditTime: 2022-11-23 15:36:39
+ * @LastEditTime: 2022-11-23 17:05:24
  * @LastEditors: NyanCatda
  * @Description: 主文件
  * @FilePath: \Atsuko\main.go
@@ -10,15 +10,26 @@ package main
 
 import (
 	"context"
+	"fmt"
 
 	"github.com/nyancatda/Atsuko/internal/Flag"
+	"github.com/nyancatda/Atsuko/tools/KeyFile"
 )
 
 var MessageChan = make(chan string) // 创建消息通道
 
 func main() {
 	// 初始化参数
-	Flag.Init()
+	if err := Flag.Init(); err != nil {
+		fmt.Println(err)
+		return
+	}
+
+	// 初始密钥文件
+	if err := KeyFile.Init(); err != nil {
+		fmt.Println(err)
+		return
+	}
 
 	var CancelServer context.CancelFunc
 	if Flag.Flag.Connect != "" {
