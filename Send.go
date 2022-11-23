@@ -1,7 +1,7 @@
 /*
  * @Author: NyanCatda
  * @Date: 2022-11-23 15:44:28
- * @LastEditTime: 2022-11-23 15:46:57
+ * @LastEditTime: 2022-11-23 19:09:50
  * @LastEditors: NyanCatda
  * @Description:
  * @FilePath: \Atsuko\Send.go
@@ -12,6 +12,7 @@ import (
 	"fmt"
 
 	"github.com/nyancatda/Atsuko/internal/Command"
+	"github.com/nyancatda/Atsuko/internal/MessageProcessing"
 	"github.com/nyancatda/Atsuko/internal/TCPComm"
 )
 
@@ -40,6 +41,13 @@ func SendMessage(CommandStr string) {
 		Message += Value
 	}
 
+	// 处理发送消息
+	Content, err := MessageProcessing.Send(Message)
+	if err != nil {
+		fmt.Println("消息发送失败:", err)
+		return
+	}
+
 	// 发送消息
-	MessageChan <- Message
+	MessageChan <- Content
 }

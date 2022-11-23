@@ -1,7 +1,7 @@
 /*
  * @Author: NyanCatda
  * @Date: 2022-11-23 17:12:24
- * @LastEditTime: 2022-11-23 17:28:23
+ * @LastEditTime: 2022-11-23 19:09:00
  * @LastEditors: NyanCatda
  * @Description: 交互密钥
  * @FilePath: \Atsuko\internal\TCPComm\ExchangeKey.go
@@ -14,6 +14,7 @@ import (
 	"strings"
 	"sync"
 
+	"github.com/nyancatda/Atsuko/internal/MessageProcessing"
 	"github.com/nyancatda/Atsuko/internal/SecretKey"
 )
 
@@ -22,7 +23,7 @@ var PersonKeyFile = KeysDir + "%s/%s/public_key.pem" // Person密钥文件路径
 
 /**
  * @description: 交换密钥
- * @param {net.Conn} Conn 连接 
+ * @param {net.Conn} Conn 连接
  * @return {*}
  */
 func ExchangeKey(Conn net.Conn) {
@@ -76,7 +77,7 @@ func ExchangeKey(Conn net.Conn) {
 					fmt.Println("交换密钥失败: ", err)
 					break
 				}
-				
+
 				break
 			} else {
 				fmt.Println("交换密钥失败")
@@ -89,5 +90,14 @@ func ExchangeKey(Conn net.Conn) {
 
 	// 等待密钥交换完成
 	WaitGroup.Wait()
+
+	// 将对方公钥写入MessageProcessing
+	Personkey, err := SecretKey.ReadPublicKey(fmt.Sprintf(PersonKeyFile, strings.Split(Conn.RemoteAddr().String(), ":")[0], strings.Split(Conn.RemoteAddr().String(), ":")[1]))
+	if err != nil {
+		fmt.Println("交换密钥失败: ", err)
+		return
+	}
+	MessageProcessing.Personkey = Personkey
+
 	fmt.Println("密钥交换完成")
 }
