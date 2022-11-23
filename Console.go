@@ -1,7 +1,7 @@
 /*
  * @Author: NyanCatda
  * @Date: 2022-11-23 15:27:01
- * @LastEditTime: 2022-11-23 15:33:57
+ * @LastEditTime: 2022-11-23 15:38:01
  * @LastEditors: NyanCatda
  * @Description: 控制台处理
  * @FilePath: \Atsuko\Console.go
@@ -24,12 +24,21 @@ import (
  * @return {*}
  */
 func CommandRegister(CancelServer context.CancelFunc) {
-	Command.Add("connect", "连接到对方客户端", func(Command string) {
-		// 连接到对方客户端，并关闭服务端
+	Command.Add("connect", "连接到对方客户端", func(CommandStr string) {
+		// 关闭服务端
 		CancelServer()
-		Connect(Command)
+
+		// 解析命令参数
+		_, Parameter := Command.Parse(CommandStr)
+		if len(Parameter) != 1 {
+			fmt.Println("命令格式错误，应为：connect [Host:Port]")
+			return
+		}
+
+		// 连接到服务端
+		Connect(Parameter[0])
 	})
-	
+
 	Help.Register()
 }
 

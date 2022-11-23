@@ -1,7 +1,7 @@
 /*
  * @Author: NyanCatda
  * @Date: 2022-11-21 19:54:01
- * @LastEditTime: 2022-11-23 15:32:39
+ * @LastEditTime: 2022-11-23 15:36:39
  * @LastEditors: NyanCatda
  * @Description: 主文件
  * @FilePath: \Atsuko\main.go
@@ -20,9 +20,16 @@ func main() {
 	// 初始化参数
 	Flag.Init()
 
-	// 启动服务端
-	Context, CancelServer := context.WithCancel(context.Background()) // 创建上下文
-	StartServe(Context)
+	var CancelServer context.CancelFunc
+	if Flag.Flag.Connect != "" {
+		// 如果存在连接参数，则直接启动客户端模式
+		Connect(Flag.Flag.Connect)
+	} else {
+		// 启动服务端
+		Context, Cancel := context.WithCancel(context.Background()) // 创建上下文
+		CancelServer = Cancel
+		StartServe(Context)
+	}
 
 	// 注册命令
 	CommandRegister(CancelServer)
