@@ -1,7 +1,7 @@
 /*
  * @Author: NyanCatda
  * @Date: 2022-11-23 14:01:05
- * @LastEditTime: 2022-11-23 15:42:29
+ * @LastEditTime: 2022-11-23 15:55:17
  * @LastEditors: NyanCatda
  * @Description: 链接处理
  * @FilePath: \Atsuko\internal\TCPComm\ConnProcess.go
@@ -22,7 +22,7 @@ var ConnectionStatus bool = false // 连接状态标识
  * @param {func} ErrorCall 错误回调函数
  * @return {*}
  */
-func ReadProcess(Conn net.Conn, Call func(string)) {
+func ReadProcess(Conn net.Conn, Call func(string, net.Conn)) {
 	Tmp := make([]byte, 4096)
 	for {
 		// 接收消息
@@ -35,7 +35,7 @@ func ReadProcess(Conn net.Conn, Call func(string)) {
 
 		// 执行回调函数
 		if string(Tmp[:]) != "" {
-			Call(string(Tmp[:]))
+			Call(string(Tmp[:]), Conn)
 		}
 
 		// 清空缓存

@@ -1,7 +1,7 @@
 /*
  * @Author: NyanCatda
  * @Date: 2022-11-22 20:06:37
- * @LastEditTime: 2022-11-23 15:43:22
+ * @LastEditTime: 2022-11-23 15:55:10
  * @LastEditors: NyanCatda
  * @Description: TCP客户端
  * @FilePath: \Atsuko\internal\TCPComm\Client.go
@@ -19,7 +19,7 @@ import (
  * @param {func} Call 回调函数
  * @return {error} 错误
  */
-func StartClient(Address string, MessageChan chan string, Call func(string)) {
+func StartClient(Address string, MessageChan chan string, Call func(string, net.Conn)) {
 	// 链接服务端
 	fmt.Println(fmt.Sprintf("正在尝试与 %s 建立连接...", Address))
 	Conn, err := net.Dial("tcp", Address)

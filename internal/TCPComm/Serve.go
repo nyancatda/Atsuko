@@ -1,7 +1,7 @@
 /*
  * @Author: NyanCatda
  * @Date: 2022-11-22 20:00:04
- * @LastEditTime: 2022-11-23 15:43:37
+ * @LastEditTime: 2022-11-23 15:55:26
  * @LastEditors: NyanCatda
  * @Description: TCP服务端
  * @FilePath: \Atsuko\internal\TCPComm\Serve.go
@@ -22,7 +22,7 @@ import (
  * @param {func} ErrorCall 错误回调函数
  * @return {*}
  */
-func StartServe(Port int, Context context.Context, MessageChan chan string, Call func(string)) {
+func StartServe(Port int, Context context.Context, MessageChan chan string, Call func(string, net.Conn)) {
 	// 启动监听访问
 	Listener, err := net.Listen("tcp", "0.0.0.0:"+strconv.Itoa(Port))
 	if err != nil {
