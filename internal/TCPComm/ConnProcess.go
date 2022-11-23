@@ -1,7 +1,7 @@
 /*
  * @Author: NyanCatda
  * @Date: 2022-11-23 14:01:05
- * @LastEditTime: 2022-11-23 15:55:17
+ * @LastEditTime: 2022-11-23 19:49:08
  * @LastEditors: NyanCatda
  * @Description: 链接处理
  * @FilePath: \Atsuko\internal\TCPComm\ConnProcess.go
@@ -26,7 +26,7 @@ func ReadProcess(Conn net.Conn, Call func(string, net.Conn)) {
 	Tmp := make([]byte, 4096)
 	for {
 		// 接收消息
-		_, err := Conn.Read(Tmp[:])
+		MesageLen, err := Conn.Read(Tmp[:])
 		if err != nil {
 			fmt.Println("链接已断开: ", err)
 			ConnectionStatus = false
@@ -34,8 +34,8 @@ func ReadProcess(Conn net.Conn, Call func(string, net.Conn)) {
 		}
 
 		// 执行回调函数
-		if string(Tmp[:]) != "" {
-			Call(string(Tmp[:]), Conn)
+		if string(Tmp[:MesageLen]) != "" {
+			Call(string(Tmp[:MesageLen]), Conn)
 		}
 
 		// 清空缓存
