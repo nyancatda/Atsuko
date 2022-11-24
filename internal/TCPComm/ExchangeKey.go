@@ -1,7 +1,7 @@
 /*
  * @Author: NyanCatda
  * @Date: 2022-11-23 17:12:24
- * @LastEditTime: 2022-11-23 20:11:23
+ * @LastEditTime: 2022-11-24 12:17:45
  * @LastEditors: NyanCatda
  * @Description: 交互密钥
  * @FilePath: \Atsuko\internal\TCPComm\ExchangeKey.go
@@ -91,12 +91,18 @@ func ExchangeKey(Conn net.Conn) {
 	// 等待密钥交换完成
 	WaitGroup.Wait()
 
-	// 将对方公钥写入MessageProcessing
+	// 将双方密钥写入MessageProcessing
 	Personkey, err := SecretKey.ReadPublicKey(fmt.Sprintf(PersonKeyFile, strings.Split(Conn.RemoteAddr().String(), ":")[0], strings.Split(Conn.RemoteAddr().String(), ":")[1]))
 	if err != nil {
 		fmt.Println("交换密钥失败: ", err)
 		return
 	}
+	MyKey, err := SecretKey.ReadKey("./")
+	if err != nil {
+		fmt.Println("交换密钥失败: ", err)
+		return
+	}
+	MessageProcessing.MyKey = MyKey
 	MessageProcessing.Personkey = Personkey
 
 	fmt.Println("密钥交换完成")

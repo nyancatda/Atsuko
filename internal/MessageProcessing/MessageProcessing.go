@@ -1,7 +1,7 @@
 /*
  * @Author: NyanCatda
  * @Date: 2022-11-23 17:50:48
- * @LastEditTime: 2022-11-24 12:07:28
+ * @LastEditTime: 2022-11-24 12:16:19
  * @LastEditors: NyanCatda
  * @Description: 消息处理
  * @FilePath: \Atsuko\internal\MessageProcessing\MessageProcessing.go
@@ -11,7 +11,6 @@ package MessageProcessing
 import (
 	"encoding/json"
 	"errors"
-	"fmt"
 
 	"github.com/nyancatda/Atsuko/internal/EncryptDecrypt"
 	"github.com/nyancatda/Atsuko/internal/EncryptDecrypt/AES"
@@ -27,18 +26,6 @@ type Content struct {
 	Message string // 消息内容
 	Key     string // AES密钥
 	Sign    string // 签名
-}
-
-func init() {
-	// 获取我的密钥
-	if MyKey == (SecretKey.Key{}) {
-		Key, err := SecretKey.ReadKey("./")
-		if err != nil {
-			fmt.Println(err)
-			return
-		}
-		MyKey = Key
-	}
 }
 
 /**
