@@ -1,7 +1,7 @@
 /*
  * @Author: NyanCatda
  * @Date: 2022-11-23 17:50:48
- * @LastEditTime: 2022-11-23 19:50:37
+ * @LastEditTime: 2022-11-24 12:07:28
  * @LastEditors: NyanCatda
  * @Description: 消息处理
  * @FilePath: \Atsuko\internal\MessageProcessing\MessageProcessing.go
@@ -14,6 +14,7 @@ import (
 	"fmt"
 
 	"github.com/nyancatda/Atsuko/internal/EncryptDecrypt"
+	"github.com/nyancatda/Atsuko/internal/EncryptDecrypt/AES"
 	"github.com/nyancatda/Atsuko/internal/SecretKey"
 )
 
@@ -23,8 +24,9 @@ var (
 )
 
 type Content struct {
-	Message string
-	Sign    string
+	Message string // 消息内容
+	Key     string // AES密钥
+	Sign    string // 签名
 }
 
 func init() {
@@ -46,8 +48,19 @@ func init() {
  * @return {error} 错误信息
  */
 func Send(Message string) (string, error) {
-	// 加密消息
-	EncryptMessage, err := EncryptDecrypt.Encrypt(Personkey, []byte(Message))
+	// 生成AES密钥
+	Key, err := AES.CreateKey()
+	if err != nil {
+		return "", err
+	}
+	// 使用AES加密消息
+	EncryptMessage, err := AES.Encrypt(Key, []byte(Message))
+	if err != nil {
+		return "", err
+	}
+
+	// 使用RAS加密密钥
+	EncryptKey, err := EncryptDecrypt.Encrypt(Personkey, []byte(Key))
 	if err != nil {
 		return "", err
 	}
@@ -61,6 +74,7 @@ func Send(Message string) (string, error) {
 	// 生成消息
 	Msg := Content{
 		Message: EncryptMessage,
+		Key:     EncryptKey,
 		Sign:    Sign,
 	}
 
@@ -87,8 +101,14 @@ func Receive(MessageContent string) (string, error) {
 		return "", err
 	}
 
-	// 解析消息
-	Message, err := EncryptDecrypt.Decrypt(MyKey, Msg.Message)
+	// 解密AES密钥
+	AESKey, err := EncryptDecrypt.Decrypt(MyKey, Msg.Key)
+	if err != nil {
+		return "", err
+	}
+
+	// 解密消息
+	Message, err := AES.Decrypt(string(AESKey), Msg.Message)
 	if err != nil {
 		return "", err
 	}
